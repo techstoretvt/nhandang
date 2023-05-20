@@ -6141,7 +6141,7 @@
                             {
                                 "class_name": "Dense",
                                 "config": {
-                                    "units": 5,
+                                    "units": 34,
                                     "activation": "softmax",
                                     "use_bias": false,
                                     "kernel_initializer": {
@@ -7447,7 +7447,7 @@
                     "name": "dense_Dense2/kernel",
                     "shape": [
                         100,
-                        5
+                        34
                     ],
                     "dtype": "float32"
                 },
