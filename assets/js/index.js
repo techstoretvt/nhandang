@@ -4,58 +4,8 @@ let model, webcam, labelContainer, maxPredictions, video;
 var speech = new SpeechSynthesisUtterance();
 var curentText = ''
 var type = 'webcam'
+var isFull = false
 
-let types = Array.from(document.querySelectorAll('.btn-media-item'))
-types[0].onclick = () => {
-    types[1].classList.remove('active')
-    types[2].classList.remove('active')
-    types[0].classList.add('active')
-
-    document.getElementById('image-container').innerHTML = ''
-    document.getElementById('video-container').innerHTML = ''
-}
-
-types[1].onclick = () => {
-    types[0].classList.remove('active')
-    types[2].classList.remove('active')
-    types[1].classList.add('active')
-
-    document.getElementById('video-container').innerHTML = ''
-
-    let inputE = document.createElement('input')
-    inputE.type = 'file'
-    inputE.onchange = (e) => {
-        let file = e.target.files[0]
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            var url = event.target.result;
-            let imgE = document.createElement('img')
-            imgE.src = url
-
-            document.getElementById('image-container').appendChild(imgE)
-            e.target.classList.add('unShow')
-        };
-
-        reader.readAsDataURL(file);
-
-
-    }
-
-    document.getElementById('image-container').appendChild(inputE)
-}
-
-types[2].onclick = () => {
-    types[1].classList.remove('active')
-    types[0].classList.remove('active')
-    types[2].classList.add('active')
-
-    document.getElementById('image-container').innerHTML = ''
-
-    let inputE = document.createElement('input')
-    inputE.type = 'file'
-
-    document.getElementById('video-container').appendChild(inputE)
-}
 
 // Load the image model and setup the webcam
 async function init() {
@@ -84,9 +34,6 @@ async function init() {
         labelContainer.appendChild(document.createElement("div"));
     }
 
-    document.querySelector('.container_btn').classList.add('unShow')
-    document.querySelector('.content').classList.remove('unShow')
-    // video = document.querySelector('video')
 }
 
 async function loop() {
@@ -94,6 +41,8 @@ async function loop() {
     await predict();
     window.requestAnimationFrame(loop);
 }
+
+init()
 
 // run the webcam image through the image model
 async function predict() {
@@ -106,7 +55,7 @@ async function predict() {
         if (prediction[i].probability.toFixed(2) > 0.78) {
             const classPrediction =
                 prediction[i].className
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+            // labelContainer.childNodes[0].innerHTML = classPrediction;
 
             if ('speechSynthesis' in window && prediction[i].className !== curentText) {
                 speech.text = prediction[i].className
@@ -115,8 +64,46 @@ async function predict() {
 
             curentText = prediction[i].className
         }
-        else {
-            labelContainer.childNodes[i].innerHTML = '';
-        }
+        // else {
+        //     labelContainer.childNodes[i].innerHTML = '';
+        // }
     }
 }
+
+
+document.addEventListener('click', function () {
+    if (!isFull) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+        }
+        isFull = true
+    }
+    else {
+        // Kiểm tra nếu trình duyệt hỗ trợ API Fullscreen
+        if (document.exitFullscreen) {
+            // Thoát khỏi chế độ toàn màn hình nếu đang ở chế độ đó
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        } else if (document.mozCancelFullScreen) { // Firefox
+            if (document.mozFullScreenElement) {
+                document.mozCancelFullScreen();
+            }
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari và Opera
+            if (document.webkitFullscreenElement) {
+                document.webkitExitFullscreen();
+            }
+        } else if (document.msExitFullscreen) { // Internet Explorer/Edge
+            if (document.msFullscreenElement) {
+                document.msExitFullscreen();
+            }
+        }
+        isFull = false
+    }
+});
