@@ -5,6 +5,7 @@ var speech = new SpeechSynthesisUtterance();
 var curentText = ''
 var type = 'webcam'
 var isFull = false
+var idTimeout
 
 
 // Load the image model and setup the webcam
@@ -52,14 +53,20 @@ async function predict() {
     const prediction = await model.predict(webcam.canvas);
 
     for (let i = 0; i < maxPredictions; i++) {
-        if (prediction[i].probability.toFixed(2) > 0.78) {
+        if (prediction[i].probability.toFixed(2) > 0.70) {
             const classPrediction =
                 prediction[i].className
             // labelContainer.childNodes[0].innerHTML = classPrediction;
 
             if ('speechSynthesis' in window && prediction[i].className !== curentText) {
-                speech.text = prediction[i].className
-                speechSynthesis.speak(speech);
+                clearTimeout(idTimeout)
+                idTimeout = setTimeout(() => {
+                    if (prediction[i].className !== 'Môi trường') {
+                        speech.lang = 'vi-VN';
+                        speech.text = prediction[i].className
+                        speechSynthesis.speak(speech);
+                    }
+                }, 1000);
             }
 
             curentText = prediction[i].className
