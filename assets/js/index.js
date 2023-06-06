@@ -53,21 +53,25 @@ async function predict() {
     const prediction = await model.predict(webcam.canvas);
 
     for (let i = 0; i < maxPredictions; i++) {
-        if (prediction[i].probability.toFixed(2) > 0.70) {
+        if (prediction[i].probability.toFixed(2) > 0.90) {
             const classPrediction =
                 prediction[i].className
+            console.log(classPrediction);
             // labelContainer.childNodes[0].innerHTML = classPrediction;
 
             if ('speechSynthesis' in window && prediction[i].className !== curentText) {
                 clearTimeout(idTimeout)
                 idTimeout = setTimeout(() => {
-                    if (prediction[i].className !== 'Môi trường') {
+                    if (prediction[i].className !== 'Môi trường' && prediction[i].className !== 'môi trường'
+                        && prediction[i].className !== 'đây là lá cờ nước hon đu rát'
+                    ) {
                         speech.lang = 'vi-VN';
                         speech.text = prediction[i].className
                         speechSynthesis.speak(speech);
                     }
-                }, 1000);
+                }, 2000);
             }
+
 
             curentText = prediction[i].className
         }
