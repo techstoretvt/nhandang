@@ -83,38 +83,39 @@ async function predict() {
 
 
 document.addEventListener('click', function () {
-    if (!isFull) {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-            document.documentElement.msRequestFullscreen();
-        }
-        isFull = true
-    }
-    else {
-        // Kiểm tra nếu trình duyệt hỗ trợ API Fullscreen
-        if (document.exitFullscreen) {
-            // Thoát khỏi chế độ toàn màn hình nếu đang ở chế độ đó
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            }
-        } else if (document.mozCancelFullScreen) { // Firefox
-            if (document.mozFullScreenElement) {
-                document.mozCancelFullScreen();
-            }
-        } else if (document.webkitExitFullscreen) { // Chrome, Safari và Opera
-            if (document.webkitFullscreenElement) {
-                document.webkitExitFullscreen();
-            }
-        } else if (document.msExitFullscreen) { // Internet Explorer/Edge
-            if (document.msFullscreenElement) {
-                document.msExitFullscreen();
-            }
-        }
-        isFull = false
-    }
+    window.close()
+    // if (!isFull) {
+    //     if (document.documentElement.requestFullscreen) {
+    //         document.documentElement.requestFullscreen();
+    //     } else if (document.documentElement.mozRequestFullScreen) {
+    //         document.documentElement.mozRequestFullScreen();
+    //     } else if (document.documentElement.webkitRequestFullscreen) {
+    //         document.documentElement.webkitRequestFullscreen();
+    //     } else if (document.documentElement.msRequestFullscreen) {
+    //         document.documentElement.msRequestFullscreen();
+    //     }
+    //     isFull = true
+    // }
+    // else {
+    //     // Kiểm tra nếu trình duyệt hỗ trợ API Fullscreen
+    //     if (document.exitFullscreen) {
+    //         // Thoát khỏi chế độ toàn màn hình nếu đang ở chế độ đó
+    //         if (document.fullscreenElement) {
+    //             document.exitFullscreen();
+    //         }
+    //     } else if (document.mozCancelFullScreen) { // Firefox
+    //         if (document.mozFullScreenElement) {
+    //             document.mozCancelFullScreen();
+    //         }
+    //     } else if (document.webkitExitFullscreen) { // Chrome, Safari và Opera
+    //         if (document.webkitFullscreenElement) {
+    //             document.webkitExitFullscreen();
+    //         }
+    //     } else if (document.msExitFullscreen) { // Internet Explorer/Edge
+    //         if (document.msFullscreenElement) {
+    //             document.msExitFullscreen();
+    //         }
+    //     }
+    //     isFull = false
+    // }
 });
