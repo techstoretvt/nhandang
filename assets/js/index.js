@@ -1,11 +1,13 @@
 const URL = "../../my_model/";
 
-let model, webcam, labelContainer, maxPredictions, video;
+let model, webcam, labelContainer, labelContainer2, maxPredictions, video;
 var speech = new SpeechSynthesisUtterance();
 var curentText = ''
 var type = 'webcam'
 var isFull = false
 var idTimeout
+var time = 0
+var textold = ''
 
 
 // Load the image model and setup the webcam
@@ -31,6 +33,7 @@ async function init() {
     // append elements to the DOM
     document.getElementById("webcam-container").appendChild(webcam.canvas);
     labelContainer = document.getElementById("label-container");
+    labelContainer2 = document.getElementById("label-container2");
     for (let i = 0; i < maxPredictions; i++) { // and class labels
         labelContainer.appendChild(document.createElement("div"));
     }
@@ -56,28 +59,29 @@ async function predict() {
         if (prediction[i].probability.toFixed(2) > 0.90) {
             const classPrediction =
                 prediction[i].className
-            console.log(classPrediction);
-            // labelContainer.childNodes[0].innerHTML = classPrediction;
+            labelContainer.innerHTML = classPrediction.replace("This is the flag of", "");
 
-            if ('speechSynthesis' in window && prediction[i].className !== curentText) {
-                clearTimeout(idTimeout)
-                idTimeout = setTimeout(() => {
-                    if (prediction[i].className !== 'Môi trường' && prediction[i].className !== 'môi trường'
-                        && prediction[i].className !== 'đây là lá cờ nước hon đu rát'
-                    ) {
-                        speech.lang = 'vi-VN';
-                        speech.text = prediction[i].className
-                        speechSynthesis.speak(speech);
-                    }
-                }, 2000);
-            }
+            // if ('speechSynthesis' in window && prediction[i].className !== curentText) {
+            //     clearTimeout(idTimeout)
+            //     idTimeout = setTimeout(() => {
+            //         if (prediction[i].className !== 'Môi trường') {
+            //             speech.lang = 'en-US';
+            //             speech.text = prediction[i].className
+            //             speechSynthesis.speak(speech);
+            //         }
+            //     }, 2000);
+            //     curentText = prediction[i].className
+            //     continue
+            // }
 
 
             curentText = prediction[i].className
         }
-        // else {
-        //     labelContainer.childNodes[i].innerHTML = '';
-        // }
+        if (prediction[i].className === curentText && prediction[i].probability.toFixed(2) < 0.90) {
+            console.log('vao');
+            labelContainer.innerHTML = ''
+            time = 0
+        }
     }
 }
 
@@ -119,3 +123,23 @@ document.addEventListener('click', function () {
     //     isFull = false
     // }
 });
+
+
+setInterval(() => {
+    if (labelContainer.innerHTML !== '') time++
+    else time = 0
+
+    if (time === 2) {
+        if ('speechSynthesis' in window && curentText !== textold) {
+            if (curentText !== 'Môi trường') {
+                speech.lang = 'en-US';
+                speech.text = curentText
+                speechSynthesis.speak(speech);
+                time = 0
+                textold = curentText
+                labelContainer2.innerHTML = textold.replace("This is the flag of", "");
+            }
+        }
+    }
+
+}, 1000);
