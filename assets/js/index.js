@@ -77,7 +77,7 @@ async function predict() {
 
             curentText = prediction[i].className
         }
-        if (prediction[i].className === curentText && prediction[i].probability.toFixed(2) < 0.90) {
+        if (prediction[i].className === curentText && prediction[i].probability.toFixed(2) < 0.60) {
             console.log('vao');
             labelContainer.innerHTML = ''
             time = 0
