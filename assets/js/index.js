@@ -56,7 +56,7 @@ async function predict() {
     const prediction = await model.predict(webcam.canvas);
 
     for (let i = 0; i < maxPredictions; i++) {
-        if (prediction[i].probability.toFixed(2) > 0.90) {
+        if (prediction[i].probability.toFixed(2) > 0.60) {
             const classPrediction =
                 prediction[i].className
             labelContainer.innerHTML = classPrediction.replace("This is the flag of", "");
